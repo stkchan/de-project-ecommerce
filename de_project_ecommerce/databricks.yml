@@ -3,7 +3,7 @@ bundle:
 
 workspace:
   profile: DEV
-  root_path: "/Workspace/Users/${workspace.current_user}/de-project-ecommerce"
+  root_path: "/Workspace/Users/${workspace.current_user.userName}/de-project-ecommerce"
 
 resources:
   jobs:
