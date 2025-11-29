@@ -19,7 +19,7 @@ resources:
           sql_task:
             warehouse_id: "{{ env.DATABRICKS_WAREHOUSE_ID }}"
             file:
-              path: "{{ job.parameters.sql_file }}"
+              path: "src/sql/bronze_ga4_events.sql"
 
 targets:
   DEV:
