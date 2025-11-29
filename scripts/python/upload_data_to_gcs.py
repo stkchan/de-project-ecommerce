@@ -39,7 +39,7 @@ def upload_parquet_to_gcs(**context):
 
     # push upload_time to XCom
     context["ti"].xcom_push(key="upload_time", value=upload_time)
-    print(f"✅ Upload complete! Took {upload_time} seconds.")
-    
+    print(f"✅ Upload complete Took {upload_time} seconds.")
+
     print("✅ Upload complete!")
     context["ti"].xcom_push(key = "upstream_task_status", value = "success")
