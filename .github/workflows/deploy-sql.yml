@@ -59,10 +59,15 @@ jobs:
           fi
 
       - name: Deploy bundle
-        run: databricks bundle deploy --target DEV
+        run: |
+          cd de_project_ecommerce
+          databricks bundle deploy --target DEV
 
+        
       - name: Run SQL via Bundle Job
         run: |
+          cd de_project_ecommerce
           databricks bundle run create_sql_job \
             --target DEV \
             --param sql_file="${{ steps.setparam.outputs.sql_file }}"
+
