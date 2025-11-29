@@ -3,7 +3,7 @@ bundle:
 
 workspace:
   profile: DEV
-  root_path: /Repos/stkza007hod@hotmail.com/de-project-ecommerce
+  root_path: "/Repos/{{ env.DATABRICKS_USER }}/de-project-ecommerce"
 
 parameters:
   sql_file:
