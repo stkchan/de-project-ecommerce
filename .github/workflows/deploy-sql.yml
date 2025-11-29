@@ -57,51 +57,7 @@ jobs:
       - name: Deploy bundle
         run: |
           cd de_project_ecommerce
-          databricks bundle deploy --target DEVname: Deploy SQL to Databricks
-
-on:
-  push:
-    paths:
-      - "src/sql/*.sql"
-      - "databricks.yml"
-
-  workflow_dispatch:
-
-jobs:
-  deploy-sql:
-    runs-on: ubuntu-latest
-
-    env:
-      DATABRICKS_HOST: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_URL }}
-      DATABRICKS_TOKEN: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_TOKEN }}
-      DATABRICKS_USER: ${{ secrets.DATABRICKS_USER }}
-      DATABRICKS_WAREHOUSE_ID: ${{ secrets.DATABRICKS_WAREHOUSE_ID }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.8
-
-      - name: Set up Databricks CLI
-        uses: databricks/setup-cli@main
-
-      - name: Verify Databricks CLI auth
-        run: databricks auth status
-
-      - name: Deploy bundle
-        run: |
-          cd de_project_ecommerce
           databricks bundle deploy --target DEV
-
-      - name: Run SQL via Bundle Job
-        run: |
-          cd de_project_ecommerce
-          databricks bundle run create_table_job --target DEV
-
 
       - name: Run SQL via Bundle Job
         run: |
