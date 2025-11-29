@@ -27,7 +27,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Databricks CLI
-        run: pip install "databricks-cli>=1.0.0" databricks-sdk
+        run: |
+          pip install databricks-cli
+          pip install databricks-sdk
 
       - name: Verify Databricks CLI auth
         run: databricks auth status
