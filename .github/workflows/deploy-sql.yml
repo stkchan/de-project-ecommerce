@@ -18,18 +18,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_HOST: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_URL }}
+      DATABRICKS_TOKEN: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_TOKEN }}
+      DATABRICKS_USER: ${{ secrets.DATABRICKS_USER }}
       DATABRICKS_WAREHOUSE_ID: ${{ secrets.DATABRICKS_WAREHOUSE_ID }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # - name: Install Databricks CLI
-      #   run: |
-      #     pip install databricks-cli
-      #     pip install databricks-sdk
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -63,11 +59,9 @@ jobs:
           cd de_project_ecommerce
           databricks bundle deploy --target DEV
 
-        
       - name: Run SQL via Bundle Job
         run: |
           cd de_project_ecommerce
-          databricks bundle run create_sql_job \
+          databricks bundle run create_table_job \
             --target DEV \
             --param sql_file="${{ steps.setparam.outputs.sql_file }}"
-

@@ -1,26 +1,28 @@
 bundle:
   name: de_project_ecommerce
 
+validate:
+  ignore_invalid_files: true
+
 workspace:
   profile: DEV
-  root_path: "/Repos/{{ env.DATABRICKS_USER }}/de-project-ecommerce"
-
-parameters:
-  sql_file:
-    type: string
-    default: "src/sql/bronze_ga4_events.sql"
-    description: "SQL file to execute on Databricks"
+  root_path: "/Workspace/Users/{{ env.DATABRICKS_USER }}/de-project-ecommerce"
 
 resources:
   jobs:
     create_table_job:
       name: create_table_job
+
+      parameters:
+        - name: sql_file
+          default: "src/sql/bronze_ga4_events.sql"
+
       tasks:
         - task_key: create_bronze_table
           sql_task:
             warehouse_id: "{{ env.DATABRICKS_WAREHOUSE_ID }}"
             file:
-              path: "{{ param.sql_file }}"
+              path: "{{ job.parameters.sql_file }}"
 
 targets:
   DEV:
