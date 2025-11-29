@@ -26,10 +26,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Databricks CLI
-        run: |
-          pip install databricks-cli
-          pip install databricks-sdk
+      # - name: Install Databricks CLI
+      #   run: |
+      #     pip install databricks-cli
+      #     pip install databricks-sdk
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Set up Databricks CLI
+        uses: databricks/setup-cli@main
 
       - name: Verify Databricks CLI auth
         run: databricks auth status
