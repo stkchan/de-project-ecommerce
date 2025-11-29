@@ -1,0 +1,58 @@
+name: Deploy SQL to Databricks
+
+on:
+  push:
+    paths:
+      - "src/sql/*.sql"
+      - "databricks.yml"
+
+  workflow_dispatch:
+    inputs:
+      sql_file:
+        description: "SQL file to deploy"
+        required: true
+        default: "src/sql/bronze_ga4_events.sql"
+
+jobs:
+  deploy-sql:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_WAREHOUSE_ID: ${{ secrets.DATABRICKS_WAREHOUSE_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: pip install databricks-cli databricks-sdk
+
+      - name: Verify Databricks CLI auth
+        run: databricks auth status
+
+      - name: Detect changed SQL file on push
+        id: detect
+        if: github.event_name == 'push'
+        run: |
+          FILE=$(git diff --name-only HEAD~1 HEAD | grep "^src/sql/.*\.sql" | head -n 1)
+          echo "sql_file=$FILE" >> $GITHUB_OUTPUT
+
+      - name: Set SQL file parameter
+        id: setparam
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "sql_file=${{ github.event.inputs.sql_file }}" >> $GITHUB_OUTPUT
+          else
+            echo "sql_file=${{ steps.detect.outputs.sql_file }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy bundle
+        run: databricks bundle deploy --target DEV
+
+      - name: Run SQL via Bundle Job
+        run: |
+          databricks bundle run create_sql_job \
+            --target DEV \
+            --param sql_file="${{ steps.setparam.outputs.sql_file }}"
