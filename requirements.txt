@@ -1,0 +1,31 @@
+# Airflow core and extras
+apache-airflow-providers-postgres>=6.2.3
+apache-airflow-providers-microsoft-azure>=12.6.1
+apache-airflow-providers-google>=17.1.0
+apache-airflow-providers-slack>=9.1.4
+apache-airflow-providers-common-sql>=1.27.5
+
+# Database connectors
+duckdb>=1.1.2
+polars>=0.19.4
+
+# Cloud SDKs
+google-cloud-storage>=2.14.0
+google-cloud-bigquery>=3.9.1
+google-cloud-secret-manager>=2.16.0
+azure-identity>=1.14.0
+azure-storage-blob>=12.21.1
+
+# dbt core and adapters
+dbt-core>=1.7.0
+dbt-postgres>=1.7.0
+dbt-bigquery>=1.7.0
+dbt-duckdb>=1.7.0
+
+# Utilities & data manipulation
+pandas>=2.1.0
+numpy>=1.27.0
+pyyaml>=6.0
+requests>=2.31.0
+pyarrow>=12.0.0
+slack-sdk>=3.26.0
