@@ -1,9 +1,6 @@
 bundle:
   name: de_project_ecommerce
 
-validate:
-  ignore_invalid_files: true
-
 workspace:
   profile: DEV
   root_path: "/Workspace/Users/{{ env.DATABRICKS_USER }}/de-project-ecommerce"
