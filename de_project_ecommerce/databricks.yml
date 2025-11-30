@@ -1,8 +1,8 @@
 bundle:
   name: de_project_ecommerce
+  version: 2
 
 workspace:
-  profile: DEV
   root_path: "/Workspace/Users/${workspace.current_user.userName}/de-project-ecommerce"
 
 resources:

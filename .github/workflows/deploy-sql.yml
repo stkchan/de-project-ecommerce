@@ -27,19 +27,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.8
-
-      - name: Install latest Databricks CLI
+      - name: Install NEW Databricks CLI (unified_cli)
         run: |
-          pip install --upgrade databricks-cli databricks-sdk
+          curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/scripts/install-unix.sh | bash
+          export PATH="$HOME/.databricks/bin:$PATH"
+          databricks version
 
-      - name: Verify Databricks CLI auth
-        run: databricks auth status
+      - name: Verify authentication
+        run: |
+          databricks auth login --host $DATABRICKS_HOST --token $DATABRICKS_TOKEN
+          databricks auth status
 
-      - name: Detect changed SQL file on push
+      - name: Detect changed SQL file
         id: detect
         if: github.event_name == 'push'
         run: |
@@ -55,12 +54,12 @@ jobs:
             echo "sql_file=${{ steps.detect.outputs.sql_file }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Deploy bundle
+      - name: Deploy Asset Bundle (Bundle v2)
         run: |
           cd de_project_ecommerce
           databricks bundle deploy --target DEV
 
-      - name: Run SQL via Bundle Job
+      - name: Run SQL Job
         run: |
           cd de_project_ecommerce
           databricks bundle run create_table_job \
