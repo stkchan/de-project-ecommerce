@@ -36,9 +36,6 @@ jobs:
         run: |
           pip install --upgrade databricks-cli databricks-sdk
 
-      - name: Set up Databricks CLI
-        uses: databricks/setup-cli@main
-
       - name: Verify Databricks CLI auth
         run: databricks auth status
 
