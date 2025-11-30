@@ -17,10 +17,12 @@ resources:
       tasks:
         - task_key: create_bronze_table
           sql_task:
-            warehouse_id: ${{ secrets.DATABRICKS_WAREHOUSE_ID }}
+            warehouse_id: "${var.warehouse_id}"
             file:
               path: "src/sql/bronze_ga4_events.sql"
 
 targets:
   DEV:
     default: true
+    vars:
+      warehouse_id: "${env.DATABRICKS_WAREHOUSE_ID}"
