@@ -32,6 +32,10 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Install latest Databricks CLI
+        run: |
+          pip install --upgrade databricks-cli databricks-sdk
+
       - name: Set up Databricks CLI
         uses: databricks/setup-cli@main
 
