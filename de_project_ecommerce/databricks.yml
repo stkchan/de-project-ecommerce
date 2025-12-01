@@ -1,28 +1,31 @@
 bundle:
   name: de_project_ecommerce
-  version: 2
+
+
+include:
+  - "./deployment/bundle/*.yml"
 
 workspace:
-  root_path: "/Workspace/Users/${workspace.current_user.userName}/de-project-ecommerce"
+  # root_path: "/Workspace/Users/${workspace.current_user.userName}/de-project-ecommerce"
+  file_path: "/"
+  artifact_path: "/Workspace/de_project_ecommerce/artifacts"
+  state_path: "/Workspace/de_project_ecommerce/state"
 
 resources:
   jobs:
     create_table_job:
-      name: create_table_job
-
-      parameters:
-        - name: sql_file
-          default: "src/sql/bronze_ga4_events.sql"
-
+      name: "Create Tables Job"
       tasks:
-        - task_key: create_bronze_table
-          sql_task:
-            warehouse_id: "${var.warehouse_id}"
-            file:
-              path: "src/sql/bronze_ga4_events.sql"
+        - task_key: "run_create_table"
+          existing_cluster_id: ${var.cluster_id}
+          python_wheel_task:
+            package_name: "de_project_ecommerce"
+            entry_point: "create_table"
+            parameters:
+              - "--environment"
+              - "${var.ENVIRONMENT}"
+              - "--catalog"
+              - "${var.CATALOG}"
+              - "--schema"
+              - "${var.SCHEMA}"
 
-targets:
-  DEV:
-    default: true
-    vars:
-      warehouse_id: "${env.DATABRICKS_WAREHOUSE_ID}"

@@ -1,0 +1,8 @@
+# Databricks files location config
+file_location_config:
+  workspace:
+    table_init_ddl: "/ddl/table_init/"
+    view_init_ddl: "/ddl/view_init/"
+  volume_artifact:
+    config: "/config/ingestion"
+    mapping: "/mapping/ingestion"
