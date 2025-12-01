@@ -1,0 +1,63 @@
+name: workflow-deploy-databricks
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        description: Branch Name
+        required: true
+
+      environment:
+        type: choice
+        description: Target Environment
+        options:
+          - dev
+          - uat
+        required: true
+
+      deployment_script:
+        type: string
+        description: Deployment Scripts
+        default: '["skip"]'
+
+
+jobs:
+  deploy-sql:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABRICKS_HOST: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_URL }}
+      DATABRICKS_TOKEN: ${{ secrets.DEPLOYMENT_TARGET_DATABRICKS_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - name: Set up Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Verify Databricks CLI auth
+        run: databricks auth status
+
+      - name: Deploy Databricks Bundle
+        run: |
+          cd de_project_ecommerce
+          databricks bundle deploy \
+            --target ${{ github.event.inputs.environment }}
+
+      - name: Run Deployment Script
+        run: |
+          cd de_project_ecommerce
+          databricks bundle run ${{ github.event.inputs.deployment_script }} \
+            --target ${{ github.event.inputs.environment }} \
+            --param environment=${{ github.event.inputs.environment }} \
+            --param catalog=${{ github.event.inputs.catalog }} \
+            --param schema=${{ github.event.inputs.schema }}
+
+
